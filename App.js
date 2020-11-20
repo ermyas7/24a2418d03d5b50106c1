@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import axios from 'axios'
 
+import moment from 'moment'
+
 
 const App = () => {
   const [posts, setPosts] = useState([])
@@ -45,6 +47,7 @@ const App = () => {
     getPosts()
   }
   const renderItem = ({item}) => {
+    const time = moment(item.created_at).format('LT, MMM YYYY')
     return(
       <View style={styles.itemContainer}>
           <View style={styles.tableRow}>
@@ -59,7 +62,7 @@ const App = () => {
           }
           <View style={styles.tableRow}>
             <Text style={styles.tableTitle}>Created At :</Text>
-            <Text style={styles.tableContent}>{item.created_at}</Text>
+            <Text style={styles.tableContent}>{time}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableTitle}>Author :</Text>
