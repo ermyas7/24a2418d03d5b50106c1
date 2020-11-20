@@ -4,17 +4,21 @@ import {
   Text, 
   FlatList, 
   ActivityIndicator,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native';
-import axios from 'axios'
+import axios from 'axios';
 
-import moment from 'moment'
+import moment from 'moment';
+import Details from './DetailsModal';
 
 
 const App = () => {
   const [posts, setPosts] = useState([])
   const [page, setPage] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
+  const [modalData, setModalData] = useState({})
   let interval
   useEffect(() => {
     getPosts()
@@ -49,7 +53,10 @@ const App = () => {
   const renderItem = ({item}) => {
     const time = moment(item.created_at).format('LT, MMM YYYY')
     return(
-      <View style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={()=>{
+        setModalData(item)
+        setOpenModal(true)
+        }}>
           <View style={styles.tableRow}>
             <Text style={styles.tableTitle}>Title :</Text>
             <Text style={styles.tableContent}>{item.title}</Text>
@@ -68,12 +75,16 @@ const App = () => {
             <Text style={styles.tableTitle}>Author :</Text>
             <Text style={styles.tableContent}>{item.author}</Text>
           </View>  
-      </View>
+      </TouchableOpacity>
     )
   }
 
   console.log(posts)
   return (
+    <>
+    {openModal &&
+    <Details data={modalData} back={setOpenModal}/>
+      }
     <View style={styles.container}>
       {loading ? <ActivityIndicator/> :
       <FlatList
@@ -84,6 +95,7 @@ const App = () => {
       />
     }
     </View>
+    </>
   );
 };
 
